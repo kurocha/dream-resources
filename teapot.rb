@@ -9,7 +9,7 @@ define_target "dream-resources" do |target|
 	target.build do |environment|
 		source_root = target.package.path + 'source'
 		
-		copy headers: source_root.glob('Dream/**/*.{h,hpp}')
+		copy headers: source_root.glob('Dream/**/*.hpp')
 		
 		build static_library: "DreamResources", source_files: source_root.glob('Dream/**/*.cpp')
 	end

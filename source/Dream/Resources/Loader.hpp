@@ -9,7 +9,11 @@
 
 #pragma once
 
+#include <Dream/Core/Logger.hpp>
+
 #include "Loadable.hpp"
+#include "FileSystem.hpp"
+
 #include <map>
 
 namespace Dream {
@@ -53,7 +57,7 @@ namespace Dream {
 		public:
 			virtual Ref<Object> load_path (const Path &res) const = 0;
 			// This resource loader's current base path
-			virtual Path resource_path () const = 0;
+			virtual const Path & resource_path () const = 0;
 
 			/// Normalize a resource request
 			virtual Path path_for_resource(Path) const = 0;

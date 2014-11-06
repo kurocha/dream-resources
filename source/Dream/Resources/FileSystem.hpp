@@ -11,6 +11,7 @@
 #include <Dream/Core/Path.hpp>
 #include <Dream/Core/Data.hpp>
 
+#include <vector>
 #include <functional>
 
 namespace Dream
@@ -46,7 +47,15 @@ namespace Dream
 			virtual ~FileSystem();
 			
 			virtual PathType path_type(const Path & path) const = 0;
+			
+			bool exists(const Path & path) const
+			{
+				return path_type(path) != PathType::UNKNOWN;
+			}
+			
 			virtual FileSize file_size(const Path & path) const = 0;
+			
+			typedef std::vector<Path> Listing;
 			
 			// List all children paths in a given path, filtering by filter
 			virtual void list(const Path & path, PathType filter, std::function<void (const Path & path)> callback) const = 0;

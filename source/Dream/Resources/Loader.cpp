@@ -14,8 +14,6 @@
 
 namespace Dream {
 	namespace Resources {
-		using namespace Events::Logging;
-
 		void Loader::set_loader_for_extension (Ptr<ILoadable> loadable, StringT ext) {
 			_loaders[ext] = loadable;
 		}
@@ -35,11 +33,11 @@ namespace Dream {
 		}
 
 		Loader::Loader (Ref<FileSystem> file_system, const Path & root) {
-			// Check that the path is actually a directory that exists.
-			DREAM_ASSERT(_file_system.file_type(root) == FileSystem::DIRECTORY);
-
 			_file_system = file_system;
 			_current_path = root;
+			
+			// Check that the path is actually a directory that exists.
+			DREAM_ASSERT(_file_system->path_type(root) == PathType::DIRECTORY);
 		}
 
 		Loader::~Loader ()
@@ -61,22 +59,18 @@ namespace Dream {
 			if (c != _data_cache.end())
 				return c->second;
 
-			if (path.exists()) {
-				Ref<IData> data = new LocalFileData(path);
-
-				// logger()->log(LOG_INFO, LogBuffer() << "Adding " << path << " to cache.");
-
+			Ref<IData> data = _file_system->load(path);
+			if (data) {
+				log("Adding", path, "to cache.");
 				_data_cache[path] = data;
-
-				return data;
-			} else {
-				return NULL;
 			}
+			
+			return data;
 		}
 
 		void Loader::preload_resource (const Path & path)
 		{
-			logger()->log(LOG_INFO, LogBuffer() << "Preloading " << path << "...");
+			log("Preloading", path, "...");
 
 			fetch_data_for_path(path_for_resource(path));
 		}
@@ -95,46 +89,43 @@ namespace Dream {
 			return path_for_resource(name_components.basename, name_components.extension, p.parent_path());
 		}
 
-		void Loader::resources_for_type(StringT ext, Path subdir, std::vector<Path> &paths) const {
-			Path full_path = _current_path + subdir;
+		void Loader::resources_for_type(StringT extension, Path subdirectory, std::vector<Path> & paths) const {
+			Path full_path = _current_path + subdirectory;
 
-			if (full_path.exists()) {
-				Path::DirectoryListingT entries = full_path.list(Path::STORAGE);
-
-				for (std::size_t i = 0; i < entries.size(); i++) {
-					if (Path(entries[i]).last_name_components().extension == ext)
-						paths.push_back(entries[i]);
-				}
+			if (_file_system->exists(full_path)) {
+				_file_system->list(full_path, PathType::STORAGE, [&](const Path & path) {
+					if (path.last_name_components().extension == extension)
+						paths.push_back(path);
+				});
 			}
 		}
 
-		Path Loader::path_for_resource(StringT name, StringT ext, Path dir) const {
-			Path full_path = _current_path + dir;
+		Path Loader::path_for_resource(StringT name, StringT extension, Path directory) const {
+			Path full_path = _current_path + directory;
 
 			//std::cerr << "Looking for: " << name << " ext: " << ext << " in: " << full_path << std::endl;
 
-			if (!full_path.exists())
+			if (!_file_system->exists(full_path))
 				return Path();
 
-			if (ext.empty()) {
+			if (extension.empty()) {
 				// Find all named resources
-				Path::DirectoryListingT resource_paths;
-				Path::DirectoryListingT entries = full_path.list(Path::STORAGE);
-
-				for (std::size_t i = 0; i < entries.size(); i++) {
+				FileSystem::Listing resource_paths;
+				
+				_file_system->list(full_path, PathType::STORAGE, [&](const Path & path){
 					//std::cerr << "Looking at: " << entries[i] << std::endl;
 
-					if (Path(entries[i]).last_name_components().basename == name) {
+					if (path.last_name_components().basename == name) {
 						//std::cerr << "\t_found: " << entries[i] << std::endl;
-						resource_paths.push_back(entries[i]);
+						resource_paths.push_back(path);
 					}
-				}
+				});
 
 				if (resource_paths.size() > 1) {
-					logger()->log(LOG_WARN, LogBuffer() << "Multiple paths found for resource: " << name << " in " << full_path);
+					log_warning("Multiple paths found for resource:", name, "in", full_path);
 
 					for (auto path : resource_paths) {
-						logger()->log(LOG_WARN, LogBuffer() << "\t" << path);
+						log_warning("\t", path);
 					}
 				}
 
@@ -144,49 +135,49 @@ namespace Dream {
 					full_path = Path();
 				}
 			} else {
-				full_path = full_path + (name + "." + ext);
+				full_path = full_path + (name + "." + extension);
 			}
 
 			//std::cerr << "Full Path = " << full_path << std::endl;
 
-			// Does a file exist?
-			if (full_path.file_status() == Path::STORAGE)
+			// Does a file exist, and is data?
+			if (_file_system->path_type(full_path) == PathType::STORAGE)
 				return full_path;
 
 			return Path();
 		}
 
-		Ref<Object> Loader::load_path (const Path &p) const {
-			if (!p.exists()) {
-				logger()->log(LOG_WARN, LogBuffer() << "File does not exist at path: " << p);
+		Ref<Object> Loader::load_path (const Path & path) const {
+			if (!_file_system->exists(path)) {
+				log_warning("File does not exist at path:", path);
 
 				return Ref<Object>();
 			}
 
-			StringT ext = p.last_name_components().extension;
-			Ptr<ILoadable> loader = loader_for_extension(ext);
+			StringT extension = path.last_name_components().extension;
+			Ptr<ILoadable> loader = loader_for_extension(extension);
 
 			if (!loader) {
 				// No loader for this type
 
-				logger()->log(LOG_WARN, LogBuffer() << "No loader found for type: " << ext << " while loading path:" << p);
+				log_warning("No loader found for type:", extension, " while loading path:", path);
 
 				return Ref<Object>();
 			}
 
-			Ref<IData> data = fetch_data_for_path(p);
+			Ref<IData> data = fetch_data_for_path(path);
 			Ref<Object> resource = NULL;
 
 			try {
 				resource = loader->load_from_data(data, this);
 			} catch (LoadError & e) {
-				logger()->log(LOG_WARN, LogBuffer() << "Exception thrown while loading resource " << p << ": " << e.what());
+				log_error("Exception thrown while loading resource ", path, ": ", e.what());
 
 				throw;
 			}
 
 			if (!resource) {
-				logger()->log(LOG_WARN, LogBuffer() << "Resource " << p << " failed to load!");
+				log_warning("Resource", path, "failed to load!");
 			}
 
 			return resource;
