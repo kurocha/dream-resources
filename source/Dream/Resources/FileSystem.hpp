@@ -23,7 +23,7 @@ namespace Dream
 		
 		typedef uint64_t FileSize;
 		
-		enum class PathType
+		enum PathType
 		{
 			// File does not exist:
 			UNKNOWN = 0,
