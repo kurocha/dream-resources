@@ -61,7 +61,7 @@ namespace Dream
 					Ref<FakeFileSystem> file_system = new FakeFileSystem;
 					Ref<ILoader> loader = new Loader(file_system, Path());
 										
-					auto data = loader->fetch_data_for_path("apple.jpg");
+					auto data = loader->load_data("apple.jpg");
 					examiner << "Data can be directly loaded.";
 					examiner.check(data);
 					

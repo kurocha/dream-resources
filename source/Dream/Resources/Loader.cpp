@@ -52,7 +52,7 @@ namespace Dream {
 			log_debug("Freed", format_data_size(total_size), "of resource data.");
 		}
 
-		Ref<IData> Loader::fetch_data_for_path (const Path & path) const
+		Ref<IData> Loader::load_data (const Path & path) const
 		{
 			CacheT::iterator c = _data_cache.find(path);
 
@@ -72,7 +72,7 @@ namespace Dream {
 		{
 			log("Preloading", path, "...");
 
-			fetch_data_for_path(path_for_resource(path));
+			load_data(path_for_resource(path));
 		}
 
 		void Loader::preload_resources (std::vector<Path> & paths)
@@ -165,7 +165,7 @@ namespace Dream {
 				return Ref<Object>();
 			}
 
-			Ref<IData> data = fetch_data_for_path(path);
+			Ref<IData> data = load_data(path);
 			Ref<Object> resource = NULL;
 
 			try {

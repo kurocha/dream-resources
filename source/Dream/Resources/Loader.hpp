@@ -93,12 +93,12 @@ namespace Dream {
 			virtual void add_loader(Ptr<ILoadable> loader) = 0;
 
 			/// Load the raw data for a given path.
-			virtual Ref<IData> fetch_data_for_path (const Path & path) const = 0;
+			virtual Ref<IData> load_data (const Path & path) const = 0;
 
 			/// Useful for loading buffers of data.
 			Ref<IData> data_for_resource (const Path & resource)
 			{
-				return fetch_data_for_path(path_for_resource(resource));
+				return load_data(path_for_resource(resource));
 			}
 		};
 
@@ -132,7 +132,7 @@ namespace Dream {
 
 			// Load a path directly with no processing
 			virtual Ref<Object> load_path(const Path &res) const;
-			virtual Ref<IData> fetch_data_for_path(const Path & path) const;
+			virtual Ref<IData> load_data(const Path & path) const;
 
 			void resources_for_type(StringT ext, Path subdir, std::vector<Path> &paths) const;
 

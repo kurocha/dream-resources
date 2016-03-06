@@ -14,16 +14,16 @@ namespace Dream
 {
 	namespace Resources
 	{
-		class LocalFileSystem
+		class LocalFileSystem : public virtual FileSystem
 		{
 		public:
 			LocalFileSystem();
 			virtual ~LocalFileSystem();
 			
-			virtual PathType path_type(const Path & path) const = 0;
-			virtual FileSize file_size(const Path & path) const = 0;
-			virtual void list(const Path & path, PathType filter, std::function<void (const Path & path)> callback) const = 0;
-			virtual Ref<IData> load(const Path & path) const = 0;
+			virtual PathType path_type(const Path & path) const;
+			virtual FileSize file_size(const Path & path) const;
+			virtual void list(const Path & path, PathType filter, std::function<void (const Path & path)> callback) const;
+			virtual Ref<IData> load(const Path & path) const;
 		};
 	}
 }
