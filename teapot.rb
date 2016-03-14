@@ -3,7 +3,7 @@
 #  This file is part of the "Teapot" project, and is released under the MIT license.
 #
 
-teapot_version "1.0"
+teapot_version "1.0.0"
 
 define_target "dream-resources" do |target|
 	target.build do |environment|
@@ -23,7 +23,7 @@ define_target "dream-resources" do |target|
 	target.depends "Library/Dream"
 	
 	target.provides "Library/DreamResources" do
-		append linkflags "-lDreamResources"
+		append linkflags {install_prefix + "lib/libDreamResources.a"}
 	end
 end
 
@@ -40,8 +40,14 @@ define_target "dream-resources-tests" do |target|
 	target.provides "Test/DreamResources"
 end
 
-define_configuration "travis" do |configuration|
-	configuration[:source] = "http://github.com/dream-framework/"
+define_configuration "dream-resources" do |configuration|
+	configuration.public!
+	
+	configuration.require "dream"
+end
+
+define_configuration "test" do |configuration|
+	configuration[:source] = "https://github.com/kurocha/"
 	
 	configuration.require "platforms"
 	configuration.require "build-files"
@@ -51,4 +57,6 @@ define_configuration "travis" do |configuration|
 	configuration.require "unit-test"
 	
 	configuration.require "language-cpp-class"
+	
+	configuration.import "dream-resources"
 end
