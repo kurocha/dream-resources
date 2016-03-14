@@ -42,7 +42,7 @@ namespace Dream {
 
 		Loader::~Loader ()
 		{
-			// logger()->log(LOG_INFO, LogBuffer() << "Loader being deallocated: " << this);
+			// log("Loader being deallocated:", this);
 
 			double total_size = 0.0;
 			for (auto cache : _data_cache) {
