@@ -60,6 +60,7 @@ namespace Dream {
 				return c->second;
 
 			Ref<IData> data = _file_system->load(path);
+			
 			if (data) {
 				log("Adding", path, "to cache.");
 				_data_cache[path] = data;
@@ -83,10 +84,12 @@ namespace Dream {
 			}
 		}
 
-		Path Loader::path_for_resource (Path p) const {
-			Path::NameComponents name_components = p.last_name_components();
+		Path Loader::path_for_resource (Path path) const {
+			if (path.is_absolute()) return path;
+			
+			auto name_components = path.last_name_components();
 
-			return path_for_resource(name_components.basename, name_components.extension, p.parent_path());
+			return path_for_resource(name_components.basename, name_components.extension, path.parent_path());
 		}
 
 		void Loader::resources_for_type(StringT extension, Path subdirectory, std::vector<Path> & paths) const {
