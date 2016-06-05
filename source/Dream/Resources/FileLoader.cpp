@@ -8,11 +8,16 @@
 
 #include "FileLoader.hpp"
 
+#include <Dream/Core/System.hpp>
+#include <Dream/Core/Data.hpp>
+
+#include <sys/stat.h>
+
 namespace Dream
 {
 	namespace Resources
 	{
-		FileLoader::FileLoader(Ptr<IFileSystem> file_system) : _file_system(file_sytem)
+		FileLoader::FileLoader()
 		{
 		}
 		
@@ -20,14 +25,13 @@ namespace Dream
 		{
 		}
 		
-		bool FileLoader::is_readable(const Path & path)
+		bool FileLoader::is_readable(const Path & path) const
 		{
 			SystemError::reset();
 
 			auto native_path = path.to_local_path();
 
-			struct stat file_info;
-			memset(&file_info, 0, sizeof(file_info));
+			struct stat file_info = {0};
 
 			if (stat(native_path.c_str(), &file_info) != 0) {
 				// If there was an error other than not found...
@@ -62,7 +66,7 @@ namespace Dream
 		{
 		}
 		
-		bool RelativeFileLoader::is_readable(const Path & path)
+		bool RelativeFileLoader::is_readable(const Path & path) const
 		{
 			return FileLoader::is_readable(_root + path);
 		}

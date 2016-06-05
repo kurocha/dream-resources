@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Loader.hpp"
+
 namespace Dream
 {
 	namespace Resources
@@ -18,7 +20,7 @@ namespace Dream
 			FileLoader();
 			virtual ~FileLoader();
 			
-			bool is_readable(const Path & path);
+			bool is_readable(const Path & path) const;
 			
 			virtual Ref<Object> load(const Path & path, const ILoader & top) const;
 		};
@@ -29,9 +31,12 @@ namespace Dream
 			RelativeFileLoader(const Path & root);
 			virtual ~RelativeFileLoader();
 			
-			bool is_readable(const Path & path);
+			bool is_readable(const Path & path) const;
 			
 			virtual Ref<Object> load(const Path & path, const ILoader & top) const;
+		
+		private:
+			Path _root;
 		};
 	}
 }

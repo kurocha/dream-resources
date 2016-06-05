@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <Dream/Core/Logger.hpp>
+#include <Dream/Core/Path.hpp>
 
 #include <vector>
 
@@ -34,7 +34,7 @@ namespace Dream
 			
 			Ref<Object> load (const Path & path)
 			{
-				load(path, *this);
+				return load(path, *this);
 			}
 			
 			virtual Ref<Object> load (const Path & path, const ILoader & top) const = 0;
@@ -49,7 +49,7 @@ namespace Dream
 			virtual ~ChainLoader();
 			
 		protected:
-			Ref<Object> load_next(const Path & path, const ILoader & top);
+			Ref<Object> load_next(const Path & path, const ILoader & top) const;
 			
 			Ref<ILoader> _next_loader;
 		};
@@ -64,6 +64,6 @@ namespace Dream
 			
 		private:
 			std::vector<Ref<ILoader>> _loaders;
-		}
+		};
 	}
 }

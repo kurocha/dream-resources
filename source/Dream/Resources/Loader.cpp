@@ -16,6 +16,10 @@ namespace Dream
 {
 	namespace Resources
 	{
+		ILoader::~ILoader ()
+		{
+		}
+		
 		ChainLoader::ChainLoader(Ptr<ILoader> next_loader) : _next_loader(next_loader)
 		{
 		}
@@ -24,7 +28,7 @@ namespace Dream
 		{
 		}
 		
-		Ref<Object> ChainLoader::load_next(const Path & path, const ILoader & top)
+		Ref<Object> ChainLoader::load_next(const Path & path, const ILoader & top) const
 		{
 			return _next_loader->load(path, top);
 		}
@@ -40,7 +44,7 @@ namespace Dream
 		Ref<Object> CompositeLoader::load(const Path & path, const ILoader & top) const
 		{
 			for (auto loader : _loaders) {
-				if (auto object = _loader->load(path, top))
+				if (auto object = loader->load(path, top))
 					return object;
 			}
 			

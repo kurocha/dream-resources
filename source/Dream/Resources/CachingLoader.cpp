@@ -12,10 +12,6 @@ namespace Dream
 {
 	namespace Resources
 	{
-		CachingLoader::CachingLoader(Ptr<ILoader> next_loader) : ChainLoader(next_loader)
-		{
-		}
-		
 		CachingLoader::~CachingLoader()
 		{
 		}
@@ -25,7 +21,7 @@ namespace Dream
 			auto iterator = _cache.find(path);
 			
 			if (iterator != _cache.end()) {
-				return *iterator;
+				return iterator->second;
 			}
 			
 			// We force top = *this, as we want to ensure consistent behaviour.

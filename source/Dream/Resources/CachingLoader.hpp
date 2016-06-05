@@ -14,7 +14,7 @@ namespace Dream
 {
 	namespace Resources
 	{
-		class CachingLoader : public Loader
+		class CachingLoader : public ChainLoader
 		{
 		public:
 			using ChainLoader::ChainLoader;
