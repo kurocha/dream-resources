@@ -10,6 +10,7 @@
 
 #include <Dream/Core/System.hpp>
 #include <Dream/Core/Data.hpp>
+#include <Dream/Core/Logger.hpp>
 
 #include <sys/stat.h>
 
@@ -17,6 +18,9 @@ namespace Dream
 {
 	namespace Resources
 	{
+		using namespace Dream::Core::Logging;
+		static bool DEBUG = false;
+		
 		FileLoader::FileLoader()
 		{
 		}
@@ -52,6 +56,8 @@ namespace Dream
 		
 		Ref<Object> FileLoader::load(const Path & path, const ILoader & top) const
 		{
+			if (DEBUG) log_debug(__PRETTY_FUNCTION__, "Loading path", path);
+
 			if (is_readable(path))
 				return new Core::LocalFileData(path);
 			else
