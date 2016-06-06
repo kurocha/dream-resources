@@ -20,6 +20,8 @@ namespace Dream
 			FileLoader();
 			virtual ~FileLoader();
 			
+			using ILoader::load;
+			
 			virtual Ref<Object> load(const Path & path, const ILoader & top) const;
 			
 		private:
@@ -32,6 +34,8 @@ namespace Dream
 		public:
 			RelativeFileLoader(const Path & root);
 			virtual ~RelativeFileLoader();
+			
+			using FileLoader::load;
 			
 			bool is_readable(const Path & path) const;
 			

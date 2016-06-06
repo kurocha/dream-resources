@@ -20,6 +20,8 @@ namespace Dream
 			using ChainLoader::ChainLoader;
 			virtual ~CachingLoader ();
 			
+			using ChainLoader::load;
+			
 			virtual Ref<Object> load(const Path & path, const ILoader & top) const;
 			
 		private:

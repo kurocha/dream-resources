@@ -48,6 +48,8 @@ namespace Dream
 			ChainLoader(Ptr<ILoader> next_loader);
 			virtual ~ChainLoader();
 			
+			using ILoader::load;
+			
 		protected:
 			Ref<Object> load_next(const Path & path, const ILoader & top) const;
 			
@@ -59,6 +61,8 @@ namespace Dream
 		public:
 			CompositeLoader(const Loaders & loaders);
 			virtual ~CompositeLoader();
+			
+			using ILoader::load;
 			
 			virtual Ref<Object> load(const Path & path, const ILoader & top) const;
 			

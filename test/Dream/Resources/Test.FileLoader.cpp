@@ -9,41 +9,28 @@
 #include <UnitTest/UnitTest.hpp>
 
 #include <Dream/Core/Data.hpp>
-#include <Dream/Resources/Loader.hpp>
+#include <Dream/Resources/FileLoader.hpp>
+
+#include <Dream/Core/Logger.hpp>
 
 namespace Dream
 {
 	namespace Resources
 	{
-		class FakeFileSystem : public FileSystem
+		using namespace Dream::Core::Logging;
+		
+		class FakeFileLoader : public FileLoader
 		{
 		public:
-			FakeFileSystem() {}
-			virtual ~FakeFileSystem() {}
+			FakeFileLoader() {}
+			virtual ~FakeFileLoader() {}
 			
-			virtual PathType path_type(const Path & path) const
-			{
-				if (path == Path("apple.jpg"))
-					return PathType::STORAGE;
-				else
-					return PathType::DIRECTORY;
-			}
-			
-			virtual FileSize file_size(const Path & path) const
-			{
-				return 1024;
-			}
-			
-			// List all children paths in a given path, filtering by filter
-			virtual void list(const Path & path, PathType filter, std::function<void (const Path & path)> callback) const
-			{
-				callback("apple.jpg");
-			}
+			using FileLoader::load;
 			
 			// Must be an exact path (can be relative if the FileSystem implementation supports that)
-			virtual Ref<IData> load(const Path & path) const
+			virtual Ref<Object> load(const Path & path, const ILoader & loader) const
 			{
-				Shared<Core::DynamicBuffer> dynamic_buffer = new DynamicBuffer;
+				Shared<Core::DynamicBuffer> dynamic_buffer(new DynamicBuffer);
 				
 				auto string = path.to_local_path();
 				dynamic_buffer->resize(string.size());
@@ -58,10 +45,10 @@ namespace Dream
 			
 			{"it should load a file",
 				[](UnitTest::Examiner & examiner) {
-					Ref<FakeFileSystem> file_system = new FakeFileSystem;
-					Ref<ILoader> loader = new Loader(file_system, Path());
-										
-					auto data = loader->load_data("apple.jpg");
+					auto loader = ref(new FakeFileLoader);
+					
+					auto data = loader->load("apple.jpg").as<IData>();
+					
 					examiner << "Data can be directly loaded.";
 					examiner.check(data);
 					
