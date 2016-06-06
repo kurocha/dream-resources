@@ -66,13 +66,11 @@ namespace Dream
 		{
 		}
 		
-		bool RelativeFileLoader::is_readable(const Path & path) const
-		{
-			return FileLoader::is_readable(_root + path);
-		}
-		
 		Ref<Object> RelativeFileLoader::load(const Path & path, const ILoader & top) const
 		{
+			// We don't handle absolute paths here.
+			if (path.is_absolute()) return nullptr;
+			
 			return FileLoader::load(_root + path, top);
 		}
 	}

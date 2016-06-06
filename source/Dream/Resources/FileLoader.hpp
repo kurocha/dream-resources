@@ -20,11 +20,13 @@ namespace Dream
 			FileLoader();
 			virtual ~FileLoader();
 			
-			bool is_readable(const Path & path) const;
-			
 			virtual Ref<Object> load(const Path & path, const ILoader & top) const;
+			
+		private:
+			bool is_readable(const Path & path) const;
 		};
 		
+		/// Load relative paths with the given root. Absolute paths will be ignored.
 		class RelativeFileLoader : public FileLoader
 		{
 		public:
