@@ -30,12 +30,13 @@ namespace Dream
 			// Must be an exact path (can be relative if the FileSystem implementation supports that)
 			virtual Ref<Object> load(const Path & path, const ILoader & loader) const
 			{
-				Shared<Core::DynamicBuffer> dynamic_buffer(new DynamicBuffer);
-				
 				auto string = path.to_local_path();
-				dynamic_buffer->resize(string.size());
-				dynamic_buffer->assign(string.data());
 				
+				Core::StaticBuffer static_buffer(string.c_str());
+
+				Shared<Core::DynamicBuffer> dynamic_buffer = new Core::DynamicBuffer(static_buffer.size());
+				dynamic_buffer->assign(static_buffer);
+
 				return new Core::BufferedData(dynamic_buffer);
 			}
 		};
@@ -52,7 +53,7 @@ namespace Dream
 					examiner << "Data can be directly loaded.";
 					examiner.check(data);
 					
-					examiner.expect(data->size()) == 9;
+					examiner.expect(data->size()) == 10;
 				}
 			},
 		};
