@@ -5,58 +5,67 @@
 
 teapot_version "1.0.0"
 
-define_target "dream-resources" do |target|
+define_target "resources" do |target|
 	target.build do |environment|
 		source_root = target.package.path + 'source'
 		
-		copy headers: source_root.glob('Dream/**/*.hpp')
+		copy headers: source_root.glob('Resources/**/*.hpp')
 		
-		build static_library: "DreamResources", source_files: source_root.glob('Dream/**/*.cpp')
+		build static_library: "Resources", source_files: source_root.glob('Resources/**/*.cpp')
 	end
 	
 	target.depends :platform
-	target.depends "Language/C++11"
+	target.depends "Language/C++11", private: true
 	
 	target.depends "Build/Files"
 	target.depends "Build/Clang"
 	
-	target.depends "Library/Dream"
+	target.depends "Library/Memory"
+	target.depends "Library/URI"
+	target.depends "Library/Buffers"
 	
-	target.provides "Library/DreamResources" do
-		append linkflags {install_prefix + "lib/libDreamResources.a"}
+	target.provides "Library/Resources" do
+		append linkflags {install_prefix + "lib/libResources.a"}
 	end
 end
 
-define_target "dream-resources-tests" do |target|
-	target.build do |environment|
+define_target "resources-tests" do |target|
+	target.build do |*arguments|
 		test_root = target.package.path + 'test'
 		
-		run tests: "DreamResources", source_files: test_root.glob('Dream/**/*.cpp')
+		copy test_assets: test_root.glob('**/fixtures/*')
+		
+		run tests: "Resources", source_files: test_root.glob('Resources/**/*.cpp'), arguments: arguments
 	end
 	
-	target.depends "Library/UnitTest"
-	target.depends "Library/DreamResources"
-
-	target.provides "Test/DreamResources"
-end
-
-define_configuration "dream-resources" do |configuration|
-	configuration.public!
+	target.depends :platform
+	target.depends "Language/C++11", private: true
 	
-	configuration.require "dream"
+	target.depends "Library/UnitTest"
+	target.depends "Library/Resources"
+
+	target.provides "Test/Resources"
 end
 
-define_configuration "test" do |configuration|
+define_configuration "development" do |configuration|
 	configuration[:source] = "https://github.com/kurocha/"
 	
 	configuration.require "platforms"
 	configuration.require "build-files"
 	
-	configuration.require "dream"
-	configuration.require "euclid"
 	configuration.require "unit-test"
 	
-	configuration.require "language-cpp-class"
+	configuration.require "generate-template"
+	configuration.require "generate-project"
+	configuration.require "generate-cpp-class"
 	
-	configuration.import "dream-resources"
+	configuration.import "resources"
+end
+
+define_configuration "resources" do |configuration|
+	configuration.public!
+	
+	configuration.require "memory"
+	configuration.require "uri"
+	configuration.require "buffers"
 end
