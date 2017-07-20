@@ -12,19 +12,19 @@
 
 namespace Resources
 {
-	template <typename LoadT>
-	class ChainLoader : public virtual Loader<LoadT>
+	template <typename LoadT, typename NextT>
+	class ChainLoader : public Loader<LoadT>
 	{
 	public:
-		ChainLoader(Loader<LoadT> * next) : _next(next) {}
+		ChainLoader(Loader<NextT> * next) : _next(next) {}
 		virtual ~ChainLoader() {}
 		
 	protected:
-		Own<LoadT> load_next(const URI::Generic & uri) const
+		Own<NextT> load_next(const URI::Generic & uri) const
 		{
 			return _next->load(uri);
 		}
 		
-		Own<Loader<LoadT>> _next;
+		Own<Loader<NextT>> _next;
 	};
 }

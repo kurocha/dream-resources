@@ -13,10 +13,10 @@
 namespace Resources
 {
 	template <typename LoadT>
-	class RelativeLoader : public ChainLoader<LoadT>
+	class RelativeLoader : public ChainLoader<LoadT, LoadT>
 	{
 	public:
-		RelativeLoader(const URI::Generic & base, Loader<LoadT> * loader) : ChainLoader<LoadT>(loader), _base(base) {}
+		RelativeLoader(const URI::Generic & base, Loader<LoadT> * loader) : ChainLoader<LoadT, LoadT>(loader), _base(base) {}
 		virtual ~RelativeLoader() {}
 		
 		virtual Own<LoadT> load(const URI::Generic & uri) const
