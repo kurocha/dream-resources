@@ -13,35 +13,28 @@
 
 namespace Resources
 {
-	class FakeFileLoader : public FileLoader
-	{
-	public:
-		FakeFileLoader() {}
-		virtual ~FakeFileLoader() {}
-		
-		using FileLoader::load;
-		
-		// Must be an exact path (can be relative if the FileSystem implementation supports that)
-		virtual Own<Data> load(const URI::Generic & uri) const
-		{
-			return owner<StringData>(uri.path.value);
-		}
-	};
-	
 	UnitTest::Suite LoaderTestSuite {
-		"Dream::Resources::Loader",
+		"Resources::FileLoader",
 		
 		{"it should load a file",
 			[](UnitTest::Examiner & examiner) {
-				auto loader = owner<FakeFileLoader>();
+				auto file_loader = owner<FileLoader>();
+				
+				auto data = file_loader->load("file:Resources/fixtures/test.txt");
+				
+				examiner.check(data);
+				examiner.expect(data->size()) == 12;
+			}
+		},
+		
+		{"it should not load non-file resources",
+			[](UnitTest::Examiner & examiner) {
+				auto loader = owner<FileLoader>();
 				
 				auto data = loader->load("apple.jpg");
 				
-				examiner << "Data can be directly loaded.";
-				examiner.check(data);
-				
-				examiner.expect(data->size()) == 9;
+				examiner.expect(data) == nullptr;
 			}
-		},
+		}
 	};
 }
