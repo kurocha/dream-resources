@@ -19,7 +19,7 @@ namespace Resources
 		RelativeLoader(const URI::Generic & base, Loader<LoadT> * loader) : ChainLoader<LoadT, LoadT>(loader), _base(base) {}
 		virtual ~RelativeLoader() {}
 		
-		virtual Own<LoadT> load(const URI::Generic & uri) const
+		virtual Owned<LoadT> load(const URI::Generic & uri) const
 		{
 			return this->load_next(_base + uri);
 		}

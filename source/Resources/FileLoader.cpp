@@ -43,13 +43,13 @@ namespace Resources
 		return true;
 	}
 	
-	Own<Data> FileLoader::load(const URI::Generic & uri) const
+	Owned<Data> FileLoader::load(const URI::Generic & uri) const
 	{
 		if (uri.scheme == "file") {
 			auto path = uri.path.value;
 			
 			if (is_readable(path)) {
-				return owner<FileData>(path);
+				return owned<FileData>(path);
 			}
 		}
 		

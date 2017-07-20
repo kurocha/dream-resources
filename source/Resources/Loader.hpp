@@ -11,7 +11,7 @@
 
 #include <URI/Generic.hpp>
 #include <Memory/Object.hpp>
-#include <Memory/Owner.hpp>
+#include <Memory/Owned.hpp>
 
 #include <vector>
 
@@ -24,6 +24,6 @@ namespace Resources
 	public:
 		virtual ~Loader() {}
 		
-		virtual Own<LoadT> load(const URI::Generic & uri) const = 0;
+		virtual Owned<LoadT> load(const URI::Generic & uri) const = 0;
 	};
 }

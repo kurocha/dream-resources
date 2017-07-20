@@ -20,11 +20,11 @@ namespace Resources
 		virtual ~ChainLoader() {}
 		
 	protected:
-		Own<NextT> load_next(const URI::Generic & uri) const
+		Owned<NextT> load_next(const URI::Generic & uri) const
 		{
 			return _next->load(uri);
 		}
 		
-		Own<Loader<NextT>> _next;
+		Owned<Loader<NextT>> _next;
 	};
 }

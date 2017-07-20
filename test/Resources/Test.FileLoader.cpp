@@ -18,7 +18,7 @@ namespace Resources
 		
 		{"it should load a file",
 			[](UnitTest::Examiner & examiner) {
-				auto file_loader = owner<FileLoader>();
+				auto file_loader = owned<FileLoader>();
 				
 				auto data = file_loader->load("file:Resources/fixtures/test.txt");
 				
@@ -29,7 +29,7 @@ namespace Resources
 		
 		{"it should not load non-file resources",
 			[](UnitTest::Examiner & examiner) {
-				auto loader = owner<FileLoader>();
+				auto loader = owned<FileLoader>();
 				
 				auto data = loader->load("apple.jpg");
 				

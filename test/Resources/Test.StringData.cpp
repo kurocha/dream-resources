@@ -9,7 +9,7 @@
 #include <UnitTest/UnitTest.hpp>
 
 #include <Resources/StringData.hpp>
-#include <Memory/Owner.hpp>
+#include <Memory/Owned.hpp>
 
 namespace Resources
 {
@@ -20,7 +20,7 @@ namespace Resources
 		
 		{"it can buffer a string",
 			[](UnitTest::Examiner & examiner) {
-				Own<Data> data = owner<StringData>("Hello World!");
+				Owned<Data> data = owned<StringData>("Hello World!");
 				
 				examiner.expect(data->size()) == 12;
 				examiner.expect(data->begin()) != nullptr;

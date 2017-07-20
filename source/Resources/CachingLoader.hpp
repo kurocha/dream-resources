@@ -19,7 +19,7 @@ namespace Resources
 		using ChainLoader<LoadT>::ChainLoader;
 		virtual ~CachingLoader() {}
 		
-		virtual Own<Object> load(const URI::Generic & uri) const
+		virtual Owned<Object> load(const URI::Generic & uri) const
 		{
 			auto iterator = _cache.find(path);
 			
@@ -35,6 +35,6 @@ namespace Resources
 		}
 		
 	private:
-		mutable std::map<const URI::Generic, Own<LoadT>> _cache;
+		mutable std::map<const URI::Generic, Owned<LoadT>> _cache;
 	};
 }

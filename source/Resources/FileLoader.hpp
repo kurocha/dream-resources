@@ -19,7 +19,7 @@ namespace Resources
 		FileLoader();
 		virtual ~FileLoader();
 		
-		virtual Own<Data> load(const URI::Generic & uri) const;
+		virtual Owned<Data> load(const URI::Generic & uri) const;
 		
 	protected:
 		bool is_readable(const std::string & path) const;

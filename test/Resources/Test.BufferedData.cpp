@@ -19,7 +19,7 @@ namespace Resources
 		{"it can make data from shared buffer",
 			[](UnitTest::Examiner & examiner) {
 				auto buffer = shared<Buffers::StaticBuffer>("Hello World!", false);
-				auto data = owner<BufferedData>(buffer);
+				auto data = owned<BufferedData>(buffer);
 				
 				examiner.expect(data->size()) == 12;
 			}

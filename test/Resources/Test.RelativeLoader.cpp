@@ -18,8 +18,8 @@ namespace Resources
 		
 		{"it should have some real tests",
 			[](UnitTest::Examiner & examiner) {
-				auto file_loader = owner<FileLoader>();
-				auto relative_loader = owner<RelativeLoader<Data>>("file:Resources/", file_loader);
+				auto file_loader = owned<FileLoader>();
+				auto relative_loader = owned<RelativeLoader<Data>>("file:Resources/", file_loader);
 				
 				auto data = relative_loader->load("fixtures/test.txt");
 				
