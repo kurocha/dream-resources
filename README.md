@@ -1,8 +1,34 @@
-# Dream Resources
+# Resources
 
-Dream Resources provides an abstract resource loading mechanism, with an implementation which can load files from the local file-system.
+Resources provides an abstract resource loading mechanism, with an implementation which can load files from the local file-system.
 
-[![Build Status](https://secure.travis-ci.org/kurocha/dream-resources.svg)](http://travis-ci.org/kurocha/dream-resources)
+[![Build Status](https://travis-ci.org/kurocha/resources.svg?branch=master)](https://travis-ci.org/kurocha/resources)
+
+## Setup
+
+The build tool `teapot` needs to be installed (which requires [Ruby][2]):
+
+	$ gem install teapot
+
+[2]: http://www.ruby-lang.org/en/downloads/
+
+### Install Dependencies
+
+To fetch project dependencies, run the following:
+
+	$ cd unit-test
+
+	$ cd resources
+	$ teapot fetch
+
+### Validate Behaviour
+
+The project can be checked by running unit tests:
+
+	$ cd resources
+	$ teapot Test/Resources
+
+## Usage
 
 ## Contributing
 
@@ -17,6 +43,8 @@ Dream Resources provides an abstract resource loading mechanism, with an impleme
 Released under the MIT license.
 
 Copyright, 2016, by [Samuel G. D. Williams](http://www.codeotaku.com/samuel-williams).
+
+Copyright, 2017, by Samuel Williams. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
