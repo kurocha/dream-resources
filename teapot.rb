@@ -49,6 +49,7 @@ end
 
 define_configuration "development" do |configuration|
 	configuration[:source] = "https://github.com/kurocha/"
+	configuration.import "resources"
 	
 	configuration.require "platforms"
 	configuration.require "build-files"
@@ -58,8 +59,6 @@ define_configuration "development" do |configuration|
 	configuration.require "generate-template"
 	configuration.require "generate-project"
 	configuration.require "generate-cpp-class"
-	
-	configuration.import "resources"
 end
 
 define_configuration "resources" do |configuration|
