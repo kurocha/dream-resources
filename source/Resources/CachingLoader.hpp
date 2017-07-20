@@ -1,6 +1,6 @@
 //
 //  CachingLoader.hpp
-//  File file is part of the "Dream" project and released under the MIT License.
+//  This file is part of the "Resources" project and released under the MIT License.
 //
 //  Created by Samuel Williams on 6/6/2016.
 //  Copyright, 2016, by Samuel Williams. All rights reserved.
