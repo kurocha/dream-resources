@@ -16,9 +16,7 @@ namespace Resources
 	class ChainLoader : public virtual Loader<LoadT>
 	{
 	public:
-		using Loader = Loader<LoadT>;
-		
-		ChainLoader(Loader * next) : _next(next) {}
+		ChainLoader(Loader<LoadT> * next) : _next(next) {}
 		virtual ~ChainLoader() {}
 		
 	protected:
@@ -27,6 +25,6 @@ namespace Resources
 			return _next->load(uri);
 		}
 		
-		Own<Loader> _next;
+		Own<Loader<LoadT>> _next;
 	};
 }

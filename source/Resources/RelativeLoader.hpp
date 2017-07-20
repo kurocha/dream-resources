@@ -16,9 +16,7 @@ namespace Resources
 	class RelativeLoader : public ChainLoader<LoadT>
 	{
 	public:
-		using Loader = Loader<LoadT>;
-		
-		RelativeLoader(const URI::Generic & base, Loader * loader) : ChainLoader<LoadT>(loader), _base(base) {}
+		RelativeLoader(const URI::Generic & base, Loader<LoadT> * loader) : ChainLoader<LoadT>(loader), _base(base) {}
 		virtual ~RelativeLoader() {}
 		
 		virtual Own<LoadT> load(const URI::Generic & uri) const

@@ -24,7 +24,7 @@ namespace Resources
 				auto data = relative_loader->load("fixtures/test.txt");
 				
 				examiner.check(data);
-				examiner.expect(data->size()) == 12;
+				examiner.expect(data->size()) == 12u;
 			}
 		},
 	};
