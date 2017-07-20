@@ -13,10 +13,10 @@
 namespace Resources
 {
 	template <typename LoadT>
-	class CachingLoader : public ChainLoader<LoadT>
+	class CachingLoader : public ChainLoader<LoadT, LoadT>
 	{
 	public:
-		using ChainLoader<LoadT>::ChainLoader;
+		using ChainLoader<LoadT, LoadT>::ChainLoader;
 		virtual ~CachingLoader() {}
 		
 		virtual Owned<Object> load(const URI::Generic & uri) const
