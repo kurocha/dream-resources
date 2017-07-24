@@ -9,22 +9,18 @@
 #pragma once
 
 #include <Memory/Object.hpp>
+#include <Buffers/Buffer.hpp>
 
 namespace Resources
 {
 	using namespace Memory;
 	
-	class Data : public Object
+	class Data : public Object, public Buffers::Buffer
 	{
 	public:
 		using Byte = unsigned char;
 		
 		Data();
 		virtual ~Data();
-		
-		virtual const Byte * begin() const = 0;
-		virtual const Byte * end() const = 0;
-		
-		virtual std::size_t size() const = 0;
 	};
 }
