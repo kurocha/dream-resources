@@ -19,19 +19,26 @@ namespace Resources
 		using ChainLoader<LoadT, LoadT>::ChainLoader;
 		virtual ~CachingLoader() {}
 		
-		virtual Owned<Object> load(const URI::Generic & uri) const
+		virtual Owned<LoadT> load(const URI::Generic & uri) const
 		{
-			auto iterator = _cache.find(path);
+			auto iterator = _cache.find(uri);
 			
 			if (iterator != _cache.end()) {
 				return iterator->second;
 			}
 			
-			auto object = load_next(path);
-			
-			_cache.insert({path, object});
+			auto object = this->load_next(uri);
+			_cache.insert({uri, object});
 			
 			return object;
+		}
+		
+		auto & cache() noexcept {return _cache;}
+		auto & cache() const noexcept {return _cache;}
+		
+		void update(const URI::Generic & uri, Owned<LoadT> object)
+		{
+			_cache.insert({uri, object});
 		}
 		
 	private:
