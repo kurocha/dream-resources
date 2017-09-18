@@ -10,6 +10,8 @@
 
 #include "ChainLoader.hpp"
 
+#include <mutex>
+
 namespace Resources
 {
 	template <typename LoadT>
@@ -21,6 +23,8 @@ namespace Resources
 		
 		virtual Owned<LoadT> load(const URI::Generic & uri) const
 		{
+			std::lock_guard<std::mutex> lock(_mutex);
+			
 			auto iterator = _cache.find(uri);
 			
 			if (iterator != _cache.end()) {
@@ -38,10 +42,13 @@ namespace Resources
 		
 		void update(const URI::Generic & uri, Owned<LoadT> object)
 		{
+			std::lock_guard<std::mutex> lock(_mutex);
+			
 			_cache.insert({uri, object});
 		}
 		
 	private:
+		mutable std::mutex _mutex;
 		mutable std::map<const URI::Generic, Owned<LoadT>> _cache;
 	};
 }
