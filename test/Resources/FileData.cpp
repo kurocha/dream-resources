@@ -12,6 +12,8 @@
 
 #include <URI/File.hpp>
 
+#include <cstdlib>
+
 namespace Resources
 {
 	UnitTest::Suite FileDataTestSuite {
@@ -19,10 +21,10 @@ namespace Resources
 		
 		{"it should load data from disk",
 			[](UnitTest::Examiner & examiner) {
-				URI::File fixture_path(getenv("RESOURCES_FIXTURES"), true);
-				URI::Generic test_path = fixture_path + "Resources/fixtures/test.txt";
+				URI::File fixtures_root(std::getenv("RESOURCES_FIXTURES"), true);
+				URI::File test_file_uri = fixtures_root + "Resources/fixtures/test.txt";
 				
-				FileData file_data(test_path.path.value);
+				FileData file_data(test_file_uri.native_path());
 				
 				examiner.expect(file_data.size()) == 12;
 			}
