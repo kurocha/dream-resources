@@ -1,5 +1,5 @@
 //
-//  Test.BufferedData.cpp
+//  BufferedData.cpp
 //  This file is part of the "Resources" project and released under the MIT License.
 //
 //  Created by Samuel Williams on 21/7/2017.
