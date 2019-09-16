@@ -8,8 +8,11 @@
 
 #include <UnitTest/UnitTest.hpp>
 
+#include <Resources/RelativeLoader.hpp>
 #include <Resources/FileLoader.hpp>
 #include <Resources/StringData.hpp>
+
+#include <URI/File.hpp>
 
 namespace Resources
 {
@@ -18,12 +21,17 @@ namespace Resources
 		
 		{"it should load a file",
 			[](UnitTest::Examiner & examiner) {
-				auto file_loader = owned<FileLoader>();
+				URI::File fixture_path(getenv("RESOURCES_FIXTURES"), true);
 				
-				auto data = file_loader->load("file:Resources/fixtures/test.txt");
+				auto file_loader = owned<FileLoader>();
+				auto loader = owned<RelativeLoader<Data>>(fixture_path, file_loader);
+				
+				auto data = loader->load("Resources/fixtures/test.txt");
 				
 				examiner.check(data);
-				examiner.expect(data->size()) == 12;
+				
+				if (data)
+					examiner.expect(data->size()) == 12;
 			}
 		},
 		

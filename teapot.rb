@@ -21,47 +21,48 @@ end
 # Build Targets
 
 define_target 'resources-library' do |target|
-	target.build do
-		source_root = target.package.path + 'source'
-		
-		copy headers: source_root.glob('Resources/**/*.hpp')
-		
-		build static_library: "Resources", source_files: source_root.glob('Resources/**/*.cpp')
-	end
+	target.depends "Language/C++14"
 	
-	target.depends 'Build/Files'
-	target.depends 'Build/Clang'
-	
-	target.depends :platform
-	target.depends "Language/C++11", private: true
-	
-	target.depends "Library/Memory"
-	target.depends "Library/URI"
-	target.depends "Library/Buffers"
+	target.depends "Library/Memory", public: true
+	target.depends "Library/URI", public: true
+	target.depends "Library/Buffers", public: true
 	
 	target.provides "Library/Resources" do
-		append linkflags [
-			->{install_prefix + 'lib/libResources.a'},
-		]
+		source_root = target.package.path + 'source'
+		
+		library_path = build static_library: "Resources", source_files: source_root.glob('Resources/**/*.cpp')
+		
+		append linkflags library_path
+		append header_search_paths source_root
+	end
+end
+
+define_target "resources-fixtures" do |target|
+	target.depends :platform
+	target.depends "Build/Files"
+	
+	target.provides "Fixtures/Resources" do
+		test_root = target.package.path + 'test'
+		cache_prefix = environment[:build_prefix] / environment.checksum
+		
+		copy source: test_root.glob("**/fixtures/*"), prefix: cache_prefix
+		
+		resources_fixtures cache_prefix
 	end
 end
 
 define_target "resources-tests" do |target|
-	target.build do |*arguments|
+	target.depends "Library/UnitTest"
+	target.depends "Language/C++14"
+	
+	target.depends "Library/Resources"
+	target.depends "Fixtures/Resources"
+	
+	target.provides "Test/Resources" do |*arguments|
 		test_root = target.package.path + 'test'
 		
-		copy test_assets: test_root.glob('**/fixtures/*')
-		
-		run tests: "Resources", source_files: test_root.glob('Resources/**/*.cpp'), arguments: arguments
+		run source_files: test_root.glob('Resources/**/*.cpp'), arguments: arguments
 	end
-	
-	target.depends :platform
-	target.depends "Language/C++11", private: true
-	
-	target.depends "Library/UnitTest"
-	target.depends "Library/Resources"
-	
-	target.provides "Test/Resources"
 end
 
 # Configurations
