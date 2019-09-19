@@ -12,6 +12,8 @@
 
 #include "FileData.hpp"
 
+#include <URI/File.hpp>
+
 namespace Resources
 {
 	FileLoader::FileLoader()
@@ -46,7 +48,7 @@ namespace Resources
 	Owned<Data> FileLoader::load(const URI::Generic & uri) const
 	{
 		if (uri.scheme == "file") {
-			auto path = uri.path.value;
+			auto path = URI::native_path(uri.path);
 			
 			if (is_readable(path)) {
 				return owned<FileData>(path);

@@ -21,10 +21,10 @@ namespace Resources
 		
 		{"it should load data from disk",
 			[](UnitTest::Examiner & examiner) {
-				URI::File fixtures_root(std::getenv("RESOURCES_FIXTURES"), true);
-				URI::File test_file_uri = fixtures_root + "Resources/fixtures/test.txt";
+				URI::Generic fixtures_root = URI::File(std::getenv("RESOURCES_FIXTURES"), true);
+				URI::Generic test_file_uri = fixtures_root + "Resources/fixtures/test.txt";
 				
-				FileData file_data(test_file_uri.native_path());
+				FileData file_data(URI::native_path(test_file_uri));
 				
 				examiner.expect(file_data.size()) == 12;
 			}
